@@ -10,13 +10,14 @@ import java.time.LocalDateTime;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import dao.JDBCQuery;
 import domain.UserBean;
+import service.ServerTicket;
 import service.ServerToken;
 
 /**
@@ -55,15 +56,55 @@ public class Login extends HttpServlet {
 			return;
 		}
 		
-		// 账号密码验证成功
-		HttpSession session = request.getSession();
-		if (session != null) {
-			// 将当前用户注册到ServerTicket
-			session.setAttribute("st", ServerToken.addUser(user));
+		login(request, response, account, password);
+	}
+	
+	public static void login(HttpServletRequest request, HttpServletResponse response, String account, String password) throws IOException, ServletException {
+		
+		UserBean user = queryUser(account, password);
+		if (user == null) {
+			backToSign(request, response,  "登录失败");
+			return;
+		}
+		
+		String token = ServerToken.addUser(user);
+		if (token == null) {
+			backToSign(request, response,  "登录失败");
+			return;
+		}
+		
+		// 账号密码验证成功，设置cookie记录token
+		// 下次如果再需要验证身份，可以从cookie中取出token验证身份
+		Cookie tokenCookie = new Cookie("token", token);
+	    tokenCookie.setMaxAge(60 * 60 * 24);   // 24 小时，单位为秒
+	    tokenCookie.setPath("/");              // 整个站点有效
+	    // tokenCookie.setDomain("example.com");  // 可选，跨子域共享
+	    tokenCookie.setHttpOnly(true);         // 防 XSS
+		response.addCookie(tokenCookie);
+	    
+		// 创建ticket，用于后续验证
+		// 并且转跳至目标业务系统
+		String app = request.getParameter("dst");
+		if (app == null) {
+			// 登录成功，但是没有设置目标业务系统的地址，转跳回去登录页面
+			backToSign(request, response,  "登录成功");
+			return;
+		}
+		
+		String ticket = ServerTicket.addTicket(app, token);
+		if (ticket == null) {
+			backToSign(request, response,  "创建ticket失败");
+			return;
 		}
 		
 		// 转跳到目标业务系统
-		response.sendRedirect(request.getParameter("dst"));
+		String appUrl = app + "?ticket=" + ticket;
+		response.sendRedirect(appUrl);
+	}
+	
+	protected static void backToSign(HttpServletRequest request, HttpServletResponse response, String err) throws ServletException, IOException {
+		request.setAttribute("err", err);
+		request.getRequestDispatcher("/login").forward(request, response);
 	}
 	
 	public static UserBean queryUser(String account, String password) {

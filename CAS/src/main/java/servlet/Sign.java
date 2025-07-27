@@ -8,14 +8,11 @@ import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dao.JDBCTransaction;
-import domain.UserBean;
-import service.ServerToken;
 
 /**
  * Servlet implementation class Sign
@@ -66,28 +63,7 @@ public class Sign extends HttpServlet {
 		if (account == null)
 			account = phone != null ? phone : null;
 		
-		UserBean user = Login.queryUser(account, password1);
-		if (user == null) {
-			backToSign(request, response,  "登录失败");
-			return;
-		}
-		
-		String token = ServerToken.addUser(user);
-		if (token == null) {
-			backToSign(request, response,  "登录失败");
-			return;
-		}
-		
-		// 账号密码验证成功
-		Cookie tokenCookie = new Cookie("token", token);
-	    tokenCookie.setMaxAge(60 * 60 * 24);   // 24 小时，单位为秒
-	    tokenCookie.setPath("/");              // 整个站点有效
-	    // tokenCookie.setDomain("example.com");  // 可选，跨子域共享
-	    tokenCookie.setHttpOnly(true);         // 防 XSS
-		response.addCookie(tokenCookie);
-	    
-		// 转跳到目标业务系统
-		response.sendRedirect(request.getParameter("dst"));
+		Login.login(request, response, account, password1);
 	}
 
 	private static final Pattern PATTERN_USERNAME = Pattern.compile("^[A-Za-z0-9]{8,16}$");

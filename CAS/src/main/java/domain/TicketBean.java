@@ -1,30 +1,31 @@
 package domain;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.util.concurrent.Delayed;
+import java.util.concurrent.TimeUnit;
 
-public class TicketBean implements Serializable {
+public class TicketBean implements Serializable, Delayed  {
 
 	private static final long serialVersionUID = 1L;
 	private String app;
+	private String ticket;
 	private String token;
-	private Timestamp created_at;
+	private long expire;
 
 	public TicketBean() {
 		super();
-		init("", "");
+		init("", "", "", 60);
 	}
 
-	public TicketBean(String app, String token) {
+	public TicketBean(String app, String token, String ticket, long ttl) {
 		super();
-		init(app, token);
+		init(app, token, ticket, ttl);
 	}
 
-	private void init(String app, String token) {
+	private void init(String app, String token, String ticket, long ttl) {
 		this.app = app;
 		this.token = token;
-		this.created_at = Timestamp.valueOf(LocalDateTime.now());
+		this.expire = System.currentTimeMillis() + ttl * 1000;
 	}
 
 	public String getApp() {
@@ -43,13 +44,22 @@ public class TicketBean implements Serializable {
 		this.token = token;
 	}
 
-	public Timestamp getCreated_at() {
-		return created_at;
+	public String getTicket() {
+		return ticket;
 	}
 
-	public void setCreated_at(Timestamp created_at) {
-		this.created_at = created_at;
+	public void setTicket(String ticket) {
+		this.ticket = ticket;
 	}
 	
+	@Override
+	public int compareTo(Delayed o) {
+		return Long.compare(this.expire, ((TicketBean) o).expire);
+	}
+
+	@Override
+	public long getDelay(TimeUnit unit) {
+        return unit.convert(expire - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+	}
 	
 }
