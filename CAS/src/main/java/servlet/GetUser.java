@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import domain.UserBean;
-import service.ServerTicket;
+import service.ServerToken;
 
 /**
  * Servlet implementation class GetUser
@@ -50,7 +50,7 @@ public class GetUser extends HttpServlet {
 		if(st.isEmpty())
 			return;
 		
-		UserBean user = ServerTicket.getUser(st);
+		UserBean user = ServerToken.getUser(st);
 		if (user == null)
 			return;
 		

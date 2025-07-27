@@ -3,6 +3,7 @@ package domain;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+
 public class UserBean implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -18,7 +19,7 @@ public class UserBean implements Serializable {
 	public UserBean() {
 		super();
 	}
-
+	
 	public int getId() {
 		return id;
 	}

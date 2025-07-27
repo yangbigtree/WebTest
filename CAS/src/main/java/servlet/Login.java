@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 
 import dao.JDBCQuery;
 import domain.UserBean;
-import service.ServerTicket;
+import service.ServerToken;
 
 /**
  * Servlet implementation class Login
@@ -59,7 +59,7 @@ public class Login extends HttpServlet {
 		HttpSession session = request.getSession();
 		if (session != null) {
 			// 将当前用户注册到ServerTicket
-			session.setAttribute("st", ServerTicket.addUser(user));
+			session.setAttribute("st", ServerToken.addUser(user));
 		}
 		
 		// 转跳到目标业务系统
