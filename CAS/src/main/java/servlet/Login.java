@@ -37,7 +37,6 @@ public class Login extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println(request.getParameter("app"));
 		request.getRequestDispatcher("index.jsp").forward(request, response);
 	}
 
@@ -53,6 +52,7 @@ public class Login extends HttpServlet {
 			// 查找不到对应的账号密码
 			request.setAttribute("err", "账号或密码错误");
 			request.getRequestDispatcher("/login").forward(request, response);
+			return;
 		}
 		
 		// 账号密码验证成功

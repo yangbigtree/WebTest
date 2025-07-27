@@ -35,7 +35,8 @@ public class Sign extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
+		request.setAttribute("sign", 1);
+		request.getRequestDispatcher("index.jsp").forward(request, response);
 	}
 
 	/**
@@ -43,41 +44,24 @@ public class Sign extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String username = request.getParameter("username");
-		String email = request.getParameter("email");
-		String phone = request.getParameter("phone");
-		String password1 = request.getParameter("password1");
-		String password2 = request.getParameter("password2");
-		if (password1.compareTo(password2) != 0) {
-			request.setAttribute("err", "两次输入的密码不一致");
-			request.getRequestDispatcher("/Sign").forward(request, response);
-		}
+		String username = null;
+		String email = null;
+		String phone = null;
+		String password1 = null;
+		String password2 = null;
 		
-		JDBCTransaction<Boolean> db = new JDBCTransaction<Boolean>("mycas", "root", "gaoda-00") {
-			protected Boolean doTransaction(Connection conn) throws SQLException {
-				PreparedStatement ps = conn.prepareStatement("INSERT INTO users SET (username, email, phone, password)"
-						+ " VALUES (?, ?, ?, ?);");
-				if (ps == null)
-					return false;
+		if (!checkParam(request, response, username, email, phone, password1, password2))
+			return;
 				
-				ps.setString(1, username);
-				ps.setString(2, email);
-				ps.setString(3, phone);
-				ps.setString(4, password1);
-				return ps.execute();
-			}
-			
-		};
-		
-		if (!db.excute()) {
-			request.setAttribute("err", "注册失败");
-			request.getRequestDispatcher("/Sign").forward(request, response);
+		if (!transactionUser(username, email, phone, password1, password2)) {
+			backToSign(request, response, "注册失败");
+			return;
 		}
 		
 		UserBean user = Login.queryUser(username, password1);
 		if (user == null) {
-			request.setAttribute("err", "登录失败");
-			request.getRequestDispatcher("/Sign").forward(request, response);
+			backToSign(request, response,  "登录失败");
+			return;
 		}
 		
 		// 账号密码验证成功
@@ -91,4 +75,50 @@ public class Sign extends HttpServlet {
 		response.sendRedirect(request.getParameter("dst"));
 	}
 
+	protected boolean checkParam(HttpServletRequest request, HttpServletResponse response, 
+			String username, String email, String phone,
+			String password1, String password2) throws ServletException, IOException {
+		username = request.getParameter("username");
+		email = request.getParameter("email");
+		phone = request.getParameter("phone");
+		password1 = request.getParameter("password1");
+		password2 = request.getParameter("password2");
+		boolean ret = (username != null || email != null || phone != null) &&
+				password1 != null && password2 != null;
+		
+		if (!ret) {
+			backToSign(request, response, "参数错误");
+		}
+		
+		if (password1.compareTo(password2) != 0) {
+			backToSign(request, response,  "两次输入的密码不一致");
+		}
+		
+		return ret;
+	}
+	
+	protected void backToSign(HttpServletRequest request, HttpServletResponse response, String err) throws ServletException, IOException {
+		request.setAttribute("err", err);
+		request.getRequestDispatcher("/sign").forward(request, response);
+	}
+	
+	protected boolean transactionUser(String username, String email, String phone,
+	String password1, String password2) {
+		JDBCTransaction<Boolean> db = new JDBCTransaction<Boolean>("mycas", "root", "gaoda-00") {
+			protected Boolean doTransaction(Connection conn) throws SQLException {
+				PreparedStatement ps = conn.prepareStatement("INSERT INTO users SET (username, email, phone, password)"
+						+ " VALUES (?, ?, ?, ?);");
+				if (ps == null)
+					return false;
+				
+				ps.setString(1, username);
+				ps.setString(2, email);
+				ps.setString(3, phone);
+				ps.setString(4, password1);
+				return ps.execute();
+			}
+		};
+		
+		return db.excute();
+	}
 }
