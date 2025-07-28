@@ -32,6 +32,12 @@ public class ServerTicket {
 		return ticket;
 	}
 	
+	public static boolean hasTicket(String ticket) {
+		init();
+		
+		return MAP_TICKET_TOKEN.containsKey(ticket);
+	}
+	
 	public static String getToken(String appUrl, String ticket) {
 		init();
 		
@@ -42,7 +48,7 @@ public class ServerTicket {
 		if (ticketBean == null)
 			return null;
 		
-		if (appUrl.compareTo(ticketBean.getApp()) != 0)
+		if (appUrl.compareTo(ticketBean.getAppUrl()) != 0)
 			return null;
 		
 		return ticketBean.getToken();

@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 public class TicketBean implements Serializable, Delayed  {
 
 	private static final long serialVersionUID = 1L;
-	private String app;
+	private String appUrl;
 	private String ticket;
 	private String token;
 	private long expire;
@@ -17,23 +17,23 @@ public class TicketBean implements Serializable, Delayed  {
 		init("", "", "", 60);
 	}
 
-	public TicketBean(String app, String token, String ticket, long ttl) {
+	public TicketBean(String appUrl, String token, String ticket, long ttl) {
 		super();
-		init(app, token, ticket, ttl);
+		init(appUrl, token, ticket, ttl);
 	}
 
-	private void init(String app, String token, String ticket, long ttl) {
-		this.app = app;
+	private void init(String appUrl, String token, String ticket, long ttl) {
+		this.appUrl = appUrl;
 		this.token = token;
 		this.expire = System.currentTimeMillis() + ttl * 1000;
 	}
 
-	public String getApp() {
-		return app;
+	public String getAppUrl() {
+		return appUrl;
 	}
 
-	public void setApp(String app) {
-		this.app = app;
+	public void setAppUrl(String appUrl) {
+		this.appUrl = appUrl;
 	}
 
 	public String getToken() {
