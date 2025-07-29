@@ -84,7 +84,7 @@ public class Login extends HttpServlet {
 	    
 		// 创建ticket，用于后续验证
 		// 并且转跳至目标业务系统
-		String app = request.getParameter("dst");
+		String app = request.getParameter("server");
 		if (app == null) {
 			// 登录成功，但是没有设置目标业务系统的地址，转跳回去登录页面
 			backToSign(request, response,  "登录成功");
