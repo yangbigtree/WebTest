@@ -53,7 +53,7 @@ public class Sign extends HttpServlet {
 			
 		Boolean ret = transactionUser(username, email, phone, password1);
 		if (ret == null	|| !ret) {
-			backToSign(request, response, "注册失败");
+			backToSign(request, response, "注册失败，用户名、邮件或电话已存在");
 			return;
 		}
 		

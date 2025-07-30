@@ -38,7 +38,17 @@ public class Login extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("index.jsp").forward(request, response);
+		
+		String token = getTokenInCookies(request);
+		if (token == null) {
+			// cookie中没有token，重新登录
+			request.getRequestDispatcher("index.jsp").forward(request, response);
+		}
+		else {
+			// cookie中有token，说明已经成功登录过
+			// 此时直接产生ticket并且返回业务系统即可
+			backToApp(request, response, token);
+		}
 	}
 
 	/**
@@ -82,6 +92,22 @@ public class Login extends HttpServlet {
 	    tokenCookie.setHttpOnly(true);         // 防 XSS
 		response.addCookie(tokenCookie);
 	    
+		backToApp(request, response, token);
+	}
+	
+	protected static String getTokenInCookies(HttpServletRequest request) {
+		String token = null;
+		Cookie [] cookies = request.getCookies();
+		for	(Cookie cookie : cookies) {
+			if ("token".compareTo(cookie.getName()) == 0) {
+				token = cookie.getValue();
+				break;
+			}
+		}
+		return token;
+	}
+	
+	protected static void backToApp(HttpServletRequest request, HttpServletResponse response, String token) throws ServletException, IOException {
 		// 创建ticket，用于后续验证
 		// 并且转跳至目标业务系统
 		String app = request.getParameter("server");

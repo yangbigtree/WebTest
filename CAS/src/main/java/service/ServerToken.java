@@ -22,7 +22,11 @@ public class ServerToken {
 		return ticket;
 	}
 	
-	public static UserBean getUser(String st) {
-		return MAP_TOKEN_USER.get(st);
+	public static UserBean getUser(String token) {
+		return MAP_TOKEN_USER.get(token);
+	}
+	
+	public static void delToken(String token) {
+		MAP_TOKEN_USER.remove(token);
 	}
 }

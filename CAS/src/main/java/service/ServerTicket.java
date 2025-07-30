@@ -1,11 +1,12 @@
 package service;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.DelayQueue;
+import java.util.Iterator;
 
 import domain.TicketBean;
-
 
 
 public class ServerTicket {
@@ -33,14 +34,10 @@ public class ServerTicket {
 	}
 	
 	public static boolean hasTicket(String ticket) {
-		init();
-		
 		return MAP_TICKET_TOKEN.containsKey(ticket);
 	}
 	
 	public static String getToken(String appUrl, String ticket) {
-		init();
-		
 		if (!MAP_TICKET_TOKEN.containsKey(ticket))
 			return null;
 
@@ -52,6 +49,16 @@ public class ServerTicket {
 			return null;
 		
 		return ticketBean.getToken();
+	}
+	
+	public static void delTicket(String token) {
+		Iterator<Map.Entry<String, TicketBean>> it = MAP_TICKET_TOKEN.entrySet().iterator();
+		while(it.hasNext()) {
+			Map.Entry<String, TicketBean> e = it.next();
+			TicketBean ticketInfo = e.getValue();
+			if (token.compareTo(ticketInfo.getToken()) == 0)
+				it.remove();
+		}
 	}
 	
 	private static void init() {
