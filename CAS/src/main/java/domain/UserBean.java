@@ -5,13 +5,18 @@ import java.sql.Timestamp;
 
 
 public class UserBean implements Serializable {
-	
+	public enum USER_ROLE {
+		eURUser,
+		eURVip,
+		eURAdmin
+	}
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String username;
 	private String password;
 	private String email;
 	private String phone;
+	private USER_ROLE role;
 	private Timestamp created_at;
 	private Timestamp updated_at;
 	private Timestamp logined_at;
@@ -82,6 +87,14 @@ public class UserBean implements Serializable {
 
 	public void setLogined_at(Timestamp logined_at) {
 		this.logined_at = logined_at;
+	}
+
+	public USER_ROLE getRole() {
+		return role;
+	}
+
+	public void setRole(USER_ROLE role) {
+		this.role = role;
 	}
 	
 }

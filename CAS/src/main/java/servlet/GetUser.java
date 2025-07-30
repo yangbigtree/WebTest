@@ -81,6 +81,7 @@ public class GetUser extends HttpServlet {
         Map<String, Object> attrs = new HashMap<String, Object>();
         attrs.put("email", user.getEmail());
         attrs.put("phone",  user.getPhone());
+        attrs.put("role",  user.getRole());
         
         if (json) {
             resp.setContentType("application/json;charset=UTF-8");

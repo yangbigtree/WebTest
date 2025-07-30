@@ -42,7 +42,7 @@ public class Login extends HttpServlet {
 		String token = getTokenInCookies(request);
 		if (token == null) {
 			// cookie中没有token，重新登录
-			request.getRequestDispatcher("index.jsp").forward(request, response);
+			request.getRequestDispatcher("/index.jsp").forward(request, response);
 		}
 		else {
 			// cookie中有token，说明已经成功登录过
