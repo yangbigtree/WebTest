@@ -5,7 +5,7 @@
 <link rel="stylesheet" type="text/css" href="/CAS/styles/login.css">
 <script src="/CAS/scripts/login.js"></script>
 
-<form action="login?app=${param.app}&dst=${param.dst}" method="post">
+<form id="loginForm" action="login?app=${param.app}&dst=${param.dst}" method="post">
 	<label for="account">账号：</label> <input type="text" id="account"
 		name="account" value="${param.account}" placeholder="电话号码或电子邮箱" required title="请输入账号">
 	<label for="password">密码：</label> <input type="password" id="password"
