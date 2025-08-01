@@ -1,12 +1,9 @@
-document.getElementById('signForm').addEventListener('submit', function(event) {
+document.getElementById('loginForm').addEventListener('submit', function(event) {
     event.preventDefault(); // 阻止表单默认提交行为
 
     // 获取输入值
     const username = document.getElementById('account').value;
     const password = document.getElementById('password').value;
-	const password2 = document.getElementById('password2').value;
-    const phone = document.getElementById('phone').value;
-    const email = document.getElementById('email').value;
 
     let isValid = true;
 
@@ -36,26 +33,6 @@ document.getElementById('signForm').addEventListener('submit', function(event) {
 	    passwordError.textContent = '两次输入的密码不一致';
 	    isValid = false;
 	}
-
-    // 验证电话号码
-    const phoneRegex = /^1[3-9]\d{9}$/; // 简单的中国大陆手机号码正则表达式
-    if (phone.trim() === '') {
-        phoneError.textContent = '电话号码不能为空';
-        isValid = false;
-    } else if (!phoneRegex.test(phone)) {
-        phoneError.textContent = '请输入有效的电话号码';
-        isValid = false;
-    }
-
-    // 验证电子邮件
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // 简单的电子邮件正则表达式
-    if (email.trim() === '') {
-        emailError.textContent = '电子邮件不能为空';
-        isValid = false;
-    } else if (!emailRegex.test(email)) {
-        emailError.textContent = '请输入有效的电子邮件地址';
-        isValid = false;
-    }
 
     // 如果所有验证通过，则提交表单
     if (isValid) {
