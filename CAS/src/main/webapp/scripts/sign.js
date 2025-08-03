@@ -57,6 +57,54 @@ document.getElementById('signForm').addEventListener('submit', function(event) {
         isValid = false;
     }
 
+    // 验证电话号码
+    const phoneRegex = /^1[3-9]\d{9}$/; // 简单的中国大陆手机号码正则表达式
+    if (phone.trim() === '') {
+        error.textContent = '电话号码不能为空';
+		error.style.display = 'block';
+        isValid = false;
+    } else if (!phoneRegex.test(phone)) {
+        error.textContent = '请输入有效的电话号码';
+		error.style.display = 'block';
+        isValid = false;
+    }
+
+    // 验证电子邮件
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // 简单的电子邮件正则表达式
+    if (email.trim() === '') {
+        error.textContent = '电子邮件不能为空';
+		error.style.display = 'block';
+        isValid = false;
+    } else if (!emailRegex.test(email)) {
+        error.textContent = '请输入有效的电子邮件地址';
+		error.style.display = 'block';
+        isValid = false;
+    }
+
+    // 验证电话号码
+    const phoneRegex = /^1[3-9]\d{9}$/; // 简单的中国大陆手机号码正则表达式
+    if (phone.trim() === '') {
+        error.textContent = '电话号码不能为空';
+		error.style.display = 'block';
+        isValid = false;
+    } else if (!phoneRegex.test(phone)) {
+        error.textContent = '请输入有效的电话号码';
+		error.style.display = 'block';
+        isValid = false;
+    }
+
+    // 验证电子邮件
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // 简单的电子邮件正则表达式
+    if (email.trim() === '') {
+        error.textContent = '电子邮件不能为空';
+		error.style.display = 'block';
+        isValid = false;
+    } else if (!emailRegex.test(email)) {
+        error.textContent = '请输入有效的电子邮件地址';
+		error.style.display = 'block';
+        isValid = false;
+    }
+
     // 如果所有验证通过，则提交表单
     if (isValid) {
         document.getElementById('registrationForm').submit();
