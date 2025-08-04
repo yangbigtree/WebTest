@@ -15,12 +15,11 @@
 	<label for="phone">电话号码：</label> <input type="text" id="phone" 
 		name="phone" value="${param.phone}" required title="请输入电话号码" />
 		<p id="phone_err" style="display:none;"></p>
-	<label for="password">密码：</label> <input type="password" id="password" 
-		name="password" value="${param.password}" required title="请输入密码" />
+	<label for="password1">密码：</label> <input type="password" id="password1" 
+		name="password1" value="${param.password}" required title="请输入密码" />
 		<p id="password_err" style="display:none;"></p> 
 	<label for="password2">再次输入密码：</label> <input type="password" id="password2" 
 		name="password2" value="${param.password2}" required title="请确认密码" />
-		<p id="password2_err" style="display:none;"></p>
 	<c:if test="${!empty err}"><p>${err}</p></c:if>
 	<button type="submit">注册</button>
 </form>

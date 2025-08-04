@@ -127,7 +127,7 @@ public class Sign extends HttpServlet {
 	
 	protected void backToSign(HttpServletRequest request, HttpServletResponse response, String err) throws ServletException, IOException {
 		request.setAttribute("err", err);
-		request.getRequestDispatcher("/sign").forward(request, response);
+		doGet(request, response);
 	}
 	
 	protected boolean transactionUser(String username, String email, String phone,

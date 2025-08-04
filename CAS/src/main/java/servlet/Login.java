@@ -60,16 +60,19 @@ public class Login extends HttpServlet {
 		String password = request.getParameter("password");
 		UserBean user = queryUser(account, password);
 		if (user == null) {
-			// 查找不到对应的账号密码
-			request.setAttribute("err", "账号或密码错误");
-			request.getRequestDispatcher("/login").forward(request, response);
+			backToSign(request, response, "账号或密码错误");
 			return;
 		}
 		
-		login(request, response, account, password);
+		_login(request, response, account, password);
 	}
 	
 	public static void login(HttpServletRequest request, HttpServletResponse response, String account, String password) throws IOException, ServletException {
+		Login obj = new Login();
+		obj._login(request, response, account, password);
+	}
+	
+	private void _login(HttpServletRequest request, HttpServletResponse response, String account, String password) throws IOException, ServletException {
 		
 		UserBean user = queryUser(account, password);
 		if (user == null) {
@@ -107,7 +110,7 @@ public class Login extends HttpServlet {
 		return token;
 	}
 	
-	protected static void backToApp(HttpServletRequest request, HttpServletResponse response, String token) throws ServletException, IOException {
+	protected void backToApp(HttpServletRequest request, HttpServletResponse response, String token) throws ServletException, IOException {
 		// 创建ticket，用于后续验证
 		// 并且转跳至目标业务系统
 		String app = request.getParameter("server");
@@ -128,9 +131,9 @@ public class Login extends HttpServlet {
 		response.sendRedirect(appUrl);
 	}
 	
-	protected static void backToSign(HttpServletRequest request, HttpServletResponse response, String err) throws ServletException, IOException {
+	protected void backToSign(HttpServletRequest request, HttpServletResponse response, String err) throws ServletException, IOException {
 		request.setAttribute("err", err);
-		request.getRequestDispatcher("/login").forward(request, response);
+		doGet(request, response);
 	}
 	
 	public static UserBean queryUser(String account, String password) {

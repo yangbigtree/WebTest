@@ -8,8 +8,10 @@
 <form id="loginForm" action="login?app=${param.app}&dst=${param.dst}" method="post">
 	<label for="account">账号：</label> <input type="text" id="account"
 		name="account" value="${param.account}" placeholder="电话号码或电子邮箱" required title="请输入账号" />
+		<p id="user_err" style="display:none;"></p>
 	<label for="password">密码：</label> <input type="password" id="password"
 		name="password" value="${param.password}" required title="请输入密码" />
+		<p id="email_err" style="display:none;"></p>
 	<div style="display: flex; align-items: center; margin-bottom: 10px;">
 		<input type="checkbox" id="admin" name="admin" checked /> <label
 			for="admin" style="margin-left: 5px;">管理员</label>

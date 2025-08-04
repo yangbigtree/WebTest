@@ -39,6 +39,11 @@
 			<artifactId>taglibs-standard-impl</artifactId>
 			<version>1.2.5</version>
 		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.28</version> <!-- 替换为最新版本 -->
+		</dependency>
 	</dependencies>
 
 	<build>
